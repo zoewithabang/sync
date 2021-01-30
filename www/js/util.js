@@ -554,7 +554,7 @@ function addQueueButtons(li) {
     // Delete
     if(hasPermission("playlistdelete")) {
         $("<button/>").addClass("btn btn-xs btn-default qbtn-delete")
-            .html("<span class='glyphicon glyphicon-trash'></span>Delete")
+            .html("<span>👻Poof~</span>")
             .click(function() {
                 socket.emit("delete", li.data("uid"));
             })

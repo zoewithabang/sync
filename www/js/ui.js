@@ -382,6 +382,14 @@ function queue(pos, src) {
 
             var duration = undefined;
             var title = undefined;
+            var tags = document.getElementById("videotitletags");
+
+            if (tags) {
+                tags = tags.value.replace(/[\[?\]?]/g, '');
+            } else {
+                tags = '';
+            }
+
             if (data.type === "fi") {
                 if (data.id.match(/^http:/)) {
                     Callbacks.queueFail({
@@ -427,7 +435,8 @@ function queue(pos, src) {
                     duration: duration,
                     title: title,
                     temp: addTemp,
-                    link: link
+                    link: link,
+                    tags: tags
                 });
             }
         });

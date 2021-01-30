@@ -28,7 +28,8 @@ const TYPE_QUEUE = {
     pos: "string",
     title: "string,boolean,optional",
     duration: "number,optional",
-    temp: "boolean,optional"
+    temp: "boolean,optional",
+    tags: "string,optional"
 };
 
 const TYPE_SET_TEMP = {
@@ -481,6 +482,10 @@ PlaylistModule.prototype.handleQueue = function (user, data) {
         }
     }
 
+    if (data.tags) {
+        data.tags = XSS.sanitizeText(data.tags);
+    }
+
     data = {
         id: data.id,
         type: data.type,
@@ -491,7 +496,8 @@ PlaylistModule.prototype.handleQueue = function (user, data) {
         shouldAddToLibrary: !temp,
         queueby: queueby,
         duration: duration,
-        maxlength: maxlength
+        maxlength: maxlength,
+        tags: data.tags
     };
 
     if (data.type === "yp") {
@@ -519,6 +525,16 @@ PlaylistModule.prototype.queueStandard = function (user, data) {
                 error(XSS.sanitizeText(String(err)));
                 self.channel.refCounter.unref("PlaylistModule::queueStandard");
                 return lock.release();
+            }
+
+            if (data.tags) {
+                data.tags.split(" ").forEach(function (tag) {
+                    tag = tag.trim();
+
+                    if (tag) {
+                        media.title += " [" + tag + "]";
+                    }
+                });
             }
 
             self._addItem(media, data, user, function () {
